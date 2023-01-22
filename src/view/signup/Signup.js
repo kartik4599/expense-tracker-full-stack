@@ -12,13 +12,25 @@ const Signup = () => {
   const emailRef = useRef();
   const SignPassRef = useRef();
 
-  const loginHandler = (e) => {
-    e.preventDefault();
-    const loginData = {
-      username: usernameRef.current.value,
-      password: loginPassRef.current.value,
-    };
-    console.log(loginData);
+  const loginHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const loginData = {
+        username: usernameRef.current.value,
+        password: loginPassRef.current.value,
+      };
+      const res = await axios.post("/auth/login", loginData);
+      console.log(res.data);
+      if (res.data.msg === "wrong email") {
+        swal("Error", "Check Your Email", "warning");
+      } else if (res.data.msg === "wrong password") {
+        swal("Error", "Enter the correct password", "error");
+      } else {
+        swal("Success", "You are logined", "success");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const signupHandler = async (e) => {
@@ -61,7 +73,7 @@ const Signup = () => {
             <input
               ref={usernameRef}
               type="text"
-              placeholder="Email or Phone"
+              placeholder="Email "
               id="username"
               required
             />
