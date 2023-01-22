@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./login.css";
+import axios from "axios";
+import swal from "sweetalert";
 
 const Signup = () => {
   const [islogin, setLogin] = useState(true);
@@ -19,14 +21,25 @@ const Signup = () => {
     console.log(loginData);
   };
 
-  const signupHandler = (e) => {
-    e.preventDefault();
-    const SignUpData = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      password: SignPassRef.current.value,
-    };
-    console.log(SignUpData);
+  const signupHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const SignUpData = {
+        name: nameRef.current.value,
+        email: emailRef.current.value,
+        password: SignPassRef.current.value,
+      };
+      const res = await axios.post("/auth/signup", SignUpData);
+      if (res.data.status) {
+        console.log(res.data.status);
+        setLogin(true);
+        swal("Success", "Account Created", "success");
+      }
+    } catch (e) {
+      if (e.response.status === 301) {
+        swal("Error", "Email Already Used", "error");
+      }
+    }
   };
 
   const toggleHandler = () => {
