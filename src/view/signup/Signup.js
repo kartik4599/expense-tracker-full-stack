@@ -16,13 +16,13 @@ const Signup = () => {
     try {
       e.preventDefault();
       const loginData = {
-        username: usernameRef.current.value,
+        email: usernameRef.current.value,
         password: loginPassRef.current.value,
       };
       const res = await axios.post("/auth/login", loginData);
       console.log(res.data);
       if (res.data.msg === "wrong email") {
-        swal("Error", "Check Your Email", "warning");
+        swal("Error", "Incorrect Your Email", "warning");
       } else if (res.data.msg === "wrong password") {
         swal("Error", "Enter the correct password", "error");
       } else {

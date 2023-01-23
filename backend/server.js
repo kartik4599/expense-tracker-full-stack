@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 app.use("/auth", AuthRouter);
 
-DB.sync()
+DB.sync({ })
   .then((data) => {
     app.listen(2001);
   })
