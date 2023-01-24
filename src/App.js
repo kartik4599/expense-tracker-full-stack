@@ -6,12 +6,12 @@ function App() {
   const [isLogin, setLogin] = useState(false);
 
   useEffect(() => {
-    const login = localStorage.getItem("Login");
+    const login = localStorage.getItem("login");
     if (login) setLogin(true);
   }, []);
 
   const loginHandler = () => {
-    localStorage.setItem("Login", "login");
+    // localStorage.setItem("Login", "login");
     setLogin(true);
   };
 

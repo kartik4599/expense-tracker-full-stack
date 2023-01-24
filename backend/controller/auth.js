@@ -1,15 +1,20 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const Token = (id) => {
+  return jwt.sign({ id }, "token"); 
+};
+
 exports.loginController = (req, res, next) => {
   const { email, password } = req.body;
-  // const email = .username;
-  // const password = req.body.password;
   User.findAll({ where: { email } })
     .then((data) => {
       if (data.length > 0) {
         bcrypt.compare(password, data[0].dataValues.password, (err, result) => {
           if (result) {
-            res.json({ msg: "Login success" });
+            const token = Token(data[0].dataValues.id);
+            res.json({ msg: "Login success", token });
           } else {
             res.json({ msg: "wrong password" });
           }
@@ -25,9 +30,6 @@ exports.loginController = (req, res, next) => {
 
 exports.signUpController = async (req, res, next) => {
   const { name, email, password } = req.body;
-  // const name = req.body.name;
-  // const email = req.body.email;
-  // const password = req.body.password;
 
   bcrypt.hash(password, 8, (err, hash) => {
     console.log(hash, err);

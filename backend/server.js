@@ -3,12 +3,17 @@ const bodyParser = require("body-parser");
 const AuthRouter = require("./routes/auth");
 const ExpenseRouter = require("./routes/expense");
 const DB = require("./util/database");
+const User = require("./model/user");
+const ExpenseTable = require("./model/expensetable");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/auth", AuthRouter);
 app.use(ExpenseRouter);
+
+User.hasMany(ExpenseTable);
+ExpenseTable.belongsTo(User);
 
 DB.sync()
   .then((data) => {

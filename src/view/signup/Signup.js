@@ -5,7 +5,6 @@ import swal from "sweetalert";
 
 const Signup = ({loginset}) => {
   const [islogin, setLogin] = useState(true);
-
   const usernameRef = useRef();
   const loginPassRef = useRef();
   const nameRef = useRef();
@@ -27,6 +26,7 @@ const Signup = ({loginset}) => {
         swal("Error", "Enter the correct password", "error");
       } else {
         swal("Success", "You are logined", "success");
+        localStorage.setItem("login",res.data.token);
         loginset();
       }
     } catch (e) {

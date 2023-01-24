@@ -12,7 +12,9 @@ const ExpensePage = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get("/getExpense");
+        const res = await axios.get("/getExpense", {
+          headers: { auth: localStorage.getItem("login") },
+        });
         console.log(res.data);
         setData(res.data);
       } catch (e) {}
@@ -29,7 +31,9 @@ const ExpensePage = () => {
         category: categoryRef.current.value,
       };
       setData([sendData, ...data]);
-      const res = await axios.post("/addExpense", sendData);
+      const res = await axios.post("/addExpense", sendData, {
+        headers: { auth: localStorage.getItem("login") },
+      });
       console.log(res);
     } catch (e) {
       console.log(e);
@@ -39,7 +43,9 @@ const ExpensePage = () => {
   const deleteHandler = async (id) => {
     const newData = data.filter((e) => e.id !== id);
     setData(newData);
-    const res = await axios.delete(`/delete/${id}`);
+    const res = await axios.delete(`/delete/${id}`, {
+      headers: { auth: localStorage.getItem("login") },
+    });
     console.log(res);
   };
 
@@ -60,7 +66,10 @@ const ExpensePage = () => {
       description: descriptionRef.current.value,
       category: categoryRef.current.value,
     };
-    const res = await axios.patch(`/update/${update}`, sendData);
+    const res = await axios.patch(`/update/${update}`, sendData, {
+      headers: { auth: localStorage.getItem("login") },
+    });
+    console.log(res.data);
     const newData = data.map((e) => {
       if (e.id === update) {
         return {
