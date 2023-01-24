@@ -3,7 +3,7 @@ import "./login.css";
 import axios from "axios";
 import swal from "sweetalert";
 
-const Signup = () => {
+const Signup = ({loginset}) => {
   const [islogin, setLogin] = useState(true);
 
   const usernameRef = useRef();
@@ -27,6 +27,7 @@ const Signup = () => {
         swal("Error", "Enter the correct password", "error");
       } else {
         swal("Success", "You are logined", "success");
+        loginset();
       }
     } catch (e) {
       console.log(e);
@@ -65,7 +66,7 @@ const Signup = () => {
         <div className="shape"></div>
         <div className="shape"></div>
       </div>
-      <form onSubmit={islogin ? loginHandler : signupHandler}>
+      <form className="form"  onSubmit={islogin ? loginHandler : signupHandler}>
         <h3>{islogin ? "Login" : "Sign Up"}</h3>
         {islogin && (
           <div className="loginClass">
@@ -115,7 +116,7 @@ const Signup = () => {
             />
           </div>
         )}
-        <button>{islogin ? "Log In" : "Sign Up"}</button>
+        <button className="bt">{islogin ? "Log In" : "Sign Up"}</button>
         <div className="switch">
           <span className="islogin">
             {islogin ? "don't" : "Already"} have account &#8594;
