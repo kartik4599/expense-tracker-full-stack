@@ -1,0 +1,37 @@
+.navcard {
+  /* width: 500px; */
+  position: sticky;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-end-start-radius: 1rem;
+  border-end-end-radius: 1rem;
+  padding: 1.5rem;
+  z-index: 10;
+  color: whitesmoke;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* margin-top: 10px; */
+}
+
+.navcard span {
+  font-size: 24px;
+  font-family: "Times New Roman", Times, serif;
+  /* font-weight: bold; */
+}
+
+.navcard ul {
+  list-style: none;
+  display: flex;
+  /* justify-content: space-around;
+    width: 25%; */
+}
+
+.navcard ul li {
+  margin: 0px 15px;
+  cursor: pointer;
+}

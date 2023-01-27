@@ -119,7 +119,7 @@ body {
 }
 
 .list span button {
-  background: none;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   text-align: center;
   color: whitesmoke;
@@ -134,7 +134,7 @@ body {
 }
 
 .list span button:last-child {
-  background-color: #dd0f0fa1;
+  background-color: #dd0f0f7c;
 }
 
 /* .list span button:first-child {
