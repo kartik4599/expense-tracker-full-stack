@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import "./expense.css";
 import axios from "axios";
+import LearderBoard from "./LearderBoard";
 
-const ExpensePage = () => {
+const ExpensePage = ({ isPremium }) => {
   const [data, setData] = useState([]);
   const [update, setUpdate] = useState(false);
   const amountRef = useRef();
@@ -179,6 +180,7 @@ const ExpensePage = () => {
               );
             })}
         </div>
+        {isPremium && <LearderBoard />}
         <div className="blob"></div>
       </div>
     </>

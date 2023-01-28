@@ -1,0 +1,19 @@
+.titleSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid rgba(224, 211, 211, 0.421);
+}
+
+.list-section {
+  border-bottom: 1px solid rgba(224, 211, 211, 0.421);
+  margin: 15px 5px;
+}
+
+.list-section div {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0px;
+}

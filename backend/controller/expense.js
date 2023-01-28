@@ -1,7 +1,4 @@
 const Expense = require("../model/expensetable");
-const keys = require("../util/keys");
-const Razorpay = require("razorpay");
-const Payment = require("../model/payment");
 
 exports.addExpense = (req, res, next) => {
   console.log(req.user);
@@ -46,21 +43,4 @@ exports.deleteExpense = (req, res, next) => {
       res.json(data);
     })
     .catch((e) => console.log(e));
-};
-
-exports.payment = (req, res, next) => {
-  const razor = new Razorpay({
-    key_id: keys.key_id,
-    key_secret: keys.key_secret,
-  });
-  const { amount, currency, receipt, notes } = req.body;
-
-  razor.orders.create({ amount, currency, receipt }, (err, order) => {
-    if (!err) res.status(201).json({ ...order, key_id: keys.key_id });
-    else res.status(301).send(err);
-  });
-};
-
-exports.paymentRecive = (req, res, next) => {
-  console.log(req.body);
 };

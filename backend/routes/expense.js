@@ -23,7 +23,4 @@ routes.delete(
   expenseController.deleteExpense
 );
 
-routes.post("/payment", expenseMiddle.authUser, expenseController.payment);
-
-routes.post("paymentrecive",expenseController.paymentRecive);
 module.exports = routes;

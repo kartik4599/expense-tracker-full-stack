@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import axios from "axios";
 import useRazorpay from "react-razorpay";
 
-const Navbar = ({ loginset }) => {
+const Navbar = ({ loginset, isPremium, premiumHandler }) => {
   const Razorpay = useRazorpay();
 
   const logoutHandler = () => {
@@ -31,9 +31,10 @@ const Navbar = ({ loginset }) => {
         currency: "INR",
         receipt: "premium",
       };
-      const res = await axios.post("/payment", sendData, {
+      const res = await axios.post("/premium/payment", sendData, {
         headers: { auth: localStorage.getItem("login") },
       });
+
       console.log(res.data);
 
       const options = {
@@ -45,6 +46,7 @@ const Navbar = ({ loginset }) => {
         image: "https://example.com/your_logo",
         order_id: res.data.id,
         handler: function (response) {
+          axios.post("/paymentrecive", response);
           alert(response.razorpay_payment_id);
           alert(response.razorpay_order_id);
           alert(response.razorpay_signature);
@@ -69,16 +71,26 @@ const Navbar = ({ loginset }) => {
     } catch (e) {
       console.log(e);
     }
+    console.log(localStorage.getItem("login"));
+    const finalres = await axios.post(
+      "/premium/recive",
+      { premium: true },
+      {
+        headers: { auth: localStorage.getItem("login") },
+      }
+    );
+    premiumHandler();
   };
 
   return (
     <nav className="navcard">
       <div>
-        <span>Expense Tracker</span>
+        <span>Expense Tracker </span>
+        {isPremium && <span className="premium">(Premium User)</span>}
       </div>
       <ul>
         <li>Home</li>
-        <li onClick={paymentHandler}>Premium</li>
+        {!isPremium && <li onClick={paymentHandler}>Premium</li>}
         <li onClick={logoutHandler}>Logout</li>
       </ul>
     </nav>

@@ -1,4 +1,3 @@
-const Razorpay = require("razorpay");
 
 const keys = {
   key_id: "rzp_test_LqkkRc8z6hagTh",
