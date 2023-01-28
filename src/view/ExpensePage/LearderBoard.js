@@ -32,13 +32,13 @@ const LearderBoard = () => {
           {see &&
             data.map((e) => {
               return (
-                <div key={e.name} className="list-section">
+                <div key={e.user.name} className="list-section">
                   <div>
-                    <h3>Name - {e.name}</h3>
+                    <h3>Name - {e.user.name}</h3>
                   </div>
                   <div>
                     <h4>Total Expense</h4>
-                    <h4>$ {e.expense}</h4>
+                    <h4>$ {e.total}</h4>
                   </div>
                 </div>
               );
