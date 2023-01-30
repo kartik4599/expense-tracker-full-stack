@@ -2,14 +2,16 @@ import React, { useRef, useState } from "react";
 import "./login.css";
 import axios from "axios";
 import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
 
-const Signup = ({loginset}) => {
+const Signup = ({ loginset }) => {
   const [islogin, setLogin] = useState(true);
   const usernameRef = useRef();
   const loginPassRef = useRef();
   const nameRef = useRef();
   const emailRef = useRef();
   const SignPassRef = useRef();
+  const navigate = useNavigate();
 
   const loginHandler = async (e) => {
     try {
@@ -26,7 +28,7 @@ const Signup = ({loginset}) => {
         swal("Error", "Enter the correct password", "error");
       } else {
         swal("Success", "You are logined", "success");
-        localStorage.setItem("login",res.data.token);
+        localStorage.setItem("login", res.data.token);
         loginset();
       }
     } catch (e) {
@@ -66,7 +68,7 @@ const Signup = ({loginset}) => {
         <div className="shape"></div>
         <div className="shape"></div>
       </div>
-      <form className="form"  onSubmit={islogin ? loginHandler : signupHandler}>
+      <form className="form" onSubmit={islogin ? loginHandler : signupHandler}>
         <h3>{islogin ? "Login" : "Sign Up"}</h3>
         {islogin && (
           <div className="loginClass">
@@ -125,6 +127,13 @@ const Signup = ({loginset}) => {
           <span className={islogin ? "select" : "unselect"}>
             <label htmlFor="slider">toggle</label>
           </span>
+        </div>
+        <div
+          className="forget"
+          onClick={() => {
+            navigate("/forgot");
+          }}>
+          <span>forgot Password?</span>
         </div>
       </form>
     </div>

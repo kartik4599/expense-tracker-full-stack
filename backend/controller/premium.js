@@ -47,37 +47,8 @@ exports.leaderboard = (req, res, next) => {
   })
     .then((data) => {
       const jsonData = JSON.parse(JSON.stringify(data));
-      console.log(jsonData);
       jsonData.sort((a, b) => b.total - a.total);
-      console.log(jsonData);
       res.json(jsonData);
-      // let idData = jsonData.reduce((r, a) => {
-      //   r[a.userId] = r[a.userId] || [];
-      //   r[a.userId].push(a);
-      //   return r;
-      // }, Object.create(null));
-
-      // const sendData = [];
-      // for (let i in idData) {
-      //   User.findByPk(i, { attributes: ["name"] })
-      //     .then((data) => {
-      //       let expense = 0;
-      //       idData[i].forEach((e) => (expense += e.amount));
-      //       const userData = JSON.parse(JSON.stringify(data));
-      //       console.log(userData);
-      //       const sendOBj = {
-      //         name: userData.name,
-      //         expense,
-      //       };
-      //       return sendData.push(sendOBj);
-      //     })
-      //     .catch((e) => console.log(e));
-      // }
-      // setTimeout(() => {
-      //   sendData.sort((a, b) => b.expense - a.expense);
-      //   res.json(sendData);
-      // }, 1000);
-      // console.log(sendData);
     })
     .catch((e) => console.log(e));
 };

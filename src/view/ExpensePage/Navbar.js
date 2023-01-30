@@ -79,6 +79,7 @@ const Navbar = ({ loginset, isPremium, premiumHandler }) => {
         headers: { auth: localStorage.getItem("login") },
       }
     );
+    console.log(finalres);
     premiumHandler();
   };
 

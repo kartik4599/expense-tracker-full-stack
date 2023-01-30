@@ -1,9 +1,15 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Sib = require("sib-api-v3-sdk");
+const keys = require("../util/keys");
+require("dotenv").config();
 
+const client = Sib.ApiClient.instance;
+const apiKey = client.authentications["api-key"];
+apiKey.apiKey = process.env.API_KEY;
 const Token = (id) => {
-  return jwt.sign({ id }, "token"); 
+  return jwt.sign({ id }, "token");
 };
 
 exports.loginController = (req, res, next) => {
@@ -53,4 +59,36 @@ exports.signUpController = async (req, res, next) => {
           .catch((e) => console.log(e));
       });
   });
+};
+
+exports.forgotController = (req, res, next) => {
+  const { email } = req.body;
+  const tranEmailApi = new Sib.TransactionalEmailsApi();
+  const sender = {
+    name: "Reset Password",
+    email: "alibaba@expense.com",
+  };
+
+  const recivers = [
+    {
+      email: email,
+    },
+  ];
+
+  tranEmailApi
+    .sendTransacEmail({
+      sender,
+      to: recivers,
+      subject: "Reset Password",
+      textContent: "Reset Your Password",
+    })
+    .then((data) => {
+      console.log(data);
+      res.status(200).json({ status: "done" });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  console.log(client);
 };
