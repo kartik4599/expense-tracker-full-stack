@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Sib = require("sib-api-v3-sdk");
 const keys = require("../util/keys");
+const ForgotPasswordRequest = require("../model/forgotPassword");
+const { v4 } = require("uuid");
 require("dotenv").config();
 
 const client = Sib.ApiClient.instance;
@@ -64,31 +66,81 @@ exports.signUpController = async (req, res, next) => {
 exports.forgotController = (req, res, next) => {
   const { email } = req.body;
   const tranEmailApi = new Sib.TransactionalEmailsApi();
-  const sender = {
-    name: "Reset Password",
-    email: "alibaba@expense.com",
-  };
-
-  const recivers = [
-    {
-      email: email,
-    },
-  ];
-
-  tranEmailApi
-    .sendTransacEmail({
-      sender,
-      to: recivers,
-      subject: "Reset Password",
-      textContent: "Reset Your Password",
+  const id = v4();
+  console.log(id);
+  User.findAll({ where: { email }, attributes: ["id"] })
+    .then((data) => {
+      const jsonData = JSON.parse(JSON.stringify(data));
+      if (jsonData.length > 0) {
+        return ForgotPasswordRequest.create({
+          id,
+          isActive: true,
+          userId: jsonData[0].id,
+        });
+      } else {
+        res.json({ status: "email not found" });
+      }
     })
     .then((data) => {
-      console.log(data);
+      const sender = {
+        name: "Reset Password",
+        email: "alibabas@expense.com",
+      };
+      const recivers = [
+        {
+          email: email,
+        },
+      ];
+      return tranEmailApi.sendTransacEmail({
+        sender,
+        to: recivers,
+        subject: "Reset Password",
+        textContent: "Reset Your Password",
+        htmlContent: `<a href=http://localhost:2001/auth/resetpassword/${id} > Reset Link </a>`,
+      });
+    })
+    .then((data) => {
       res.status(200).json({ status: "done" });
     })
     .catch((e) => {
       console.log(e);
+      res.json({ status: "error" });
     });
+};
 
-  console.log(client);
+exports.resetController = (req, res, next) => {
+  console.log(req.params.id);
+  ForgotPasswordRequest.findByPk(req.params.id)
+    .then((data) => {
+      if (data.isActive) {
+        data.isActive = false;
+        data.save();
+        res.send(`
+        <form action='http://localhost:2001/auth/final' method='POST'>
+          <input name='password' placeholder='enter new password'/>
+          <input type="hidden" name="id" value=${data.userId} />
+          <button type='submit'>Submit</button>
+        </form>`);
+      } else {
+        res.send("<h1>Link Exprire</h1>");
+      }
+    })
+    .catch((e) => {
+      res.send("<h1>Link Exprire</h1>");
+      console.log(e);
+    });
+};
+
+exports.finalReset = (req, res, next) => {
+  const { password, id } = req.body;
+
+  bcrypt.hash(password, 8, (err, hash) => {
+    User.findByPk(id)
+      .then((data) => {
+        data.password = hash;
+        data.save();
+        res.send("<h3>Password Has Been Reset!</h3><h3>Login again</h3> ");
+      })
+      .catch((e) => console.log(e));
+  });
 };

@@ -7,6 +7,7 @@ const DB = require("./util/database");
 const User = require("./model/user");
 const ExpenseTable = require("./model/expensetable");
 const Payment = require("./model/payment");
+const ForgotPasswordRequest = require("./model/forgotPassword");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,6 +20,7 @@ User.hasMany(ExpenseTable);
 ExpenseTable.belongsTo(User);
 User.hasMany(Payment);
 Payment.belongsTo(User);
+User.hasMany(ForgotPasswordRequest);
 
 DB.sync()
   .then((data) => {

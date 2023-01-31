@@ -8,4 +8,7 @@ router.post("/signup", authController.signUpController);
 
 router.post("/forgot", authController.forgotController);
 
+router.get("/resetpassword/:id", authController.resetController);
+
+router.post("/final",authController.finalReset);
 module.exports = router;

@@ -133,7 +133,7 @@ const Signup = ({ loginset }) => {
           onClick={() => {
             navigate("/forgot");
           }}>
-          <span>forgot Password?</span>
+          <span>Forgot password ?</span>
         </div>
       </form>
     </div>
