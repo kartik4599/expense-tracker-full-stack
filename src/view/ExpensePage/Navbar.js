@@ -3,8 +3,10 @@ import "./navbar.css";
 import swal from "sweetalert";
 import axios from "axios";
 import useRazorpay from "react-razorpay";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ loginset, isPremium, premiumHandler }) => {
+  const navigate = useNavigate();
   const Razorpay = useRazorpay();
 
   const logoutHandler = () => {
@@ -90,7 +92,20 @@ const Navbar = ({ loginset, isPremium, premiumHandler }) => {
         {isPremium && <span className="premium">(Premium User)</span>}
       </div>
       <ul>
-        <li>Home</li>
+        <li
+          onClick={() => {
+            navigate("/");
+          }}>
+          Home
+        </li>
+        {isPremium && (
+          <li
+            onClick={() => {
+              navigate("/report");
+            }}>
+            Report
+          </li>
+        )}
         {!isPremium && <li onClick={paymentHandler}>Premium</li>}
         <li onClick={logoutHandler}>Logout</li>
       </ul>

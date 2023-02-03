@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import "./expense.css";
 import axios from "axios";
 import LearderBoard from "./LearderBoard";
+import ExpenseTable from "./ExpenseTable";
 
-const ExpensePage = ({ isPremium }) => {
+const ExpensePage = ({ isPremium, totalCount }) => {
   const [data, setData] = useState([]);
   const [update, setUpdate] = useState(false);
+  const [currentPage, setcurrentPage] = useState(0);
   const amountRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -13,7 +15,7 @@ const ExpensePage = ({ isPremium }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get("/getExpense", {
+        const res = await axios.get(`/getExpense/${currentPage}`, {
           headers: { auth: localStorage.getItem("login") },
         });
         console.log(res.data);
@@ -21,7 +23,7 @@ const ExpensePage = ({ isPremium }) => {
       } catch (e) {}
     };
     getData();
-  }, []);
+  }, [currentPage]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -86,8 +88,6 @@ const ExpensePage = ({ isPremium }) => {
     setUpdate(false);
   };
 
-  console.log("update=>", update);
-
   return (
     <>
       <div className="container">
@@ -144,41 +144,31 @@ const ExpensePage = ({ isPremium }) => {
         </div>
         <div className="expenseList">
           {data.length === 0 && <div className="card">No Expenses Added</div>}
-          {data.length !== 0 &&
-            data.map((e, i) => {
-              const date = new Date(e.updatedAt);
-              return (
-                <div key={e.id} className="listContainer">
-                  <div className="card">
-                    <div className="list">
-                      <div>
-                        <h3>
-                          {i + 1}. {e.description}
-                        </h3>
-                        <h4>${e.amount} </h4>
-                      </div>
-                      <div>
-                        <h4>{e.category}</h4>
-                        <p>
-                          last updated on{" "}
-                          {`${date.getDate()}-${
-                            date.getMonth() + 1
-                          }-${date.getFullYear()}`}
-                        </p>
-                      </div>
-                      <span>
-                        <button onClick={updateHandler.bind(null, e.id)}>
-                          Update
-                        </button>
-                        <button onClick={deleteHandler.bind(null, e.id)}>
-                          Delete
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          {data.length > 0 && (
+            <>
+              <ExpenseTable
+                data={data}
+                updateHandler={updateHandler}
+                deleteHandler={deleteHandler}
+              />
+              <div className="pageCount">
+                {Array.apply(null, Array(totalCount)).map((e, i) => {
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setcurrentPage(i);
+                      }}
+                      className={
+                        currentPage === i ? "pagebutton" : "elseButton"
+                      }>
+                      {i + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
         {isPremium && <LearderBoard />}
         <div className="blob"></div>

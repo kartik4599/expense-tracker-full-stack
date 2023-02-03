@@ -25,9 +25,27 @@ exports.updateExpense = (req, res, next) => {
 };
 
 exports.getExpense = (req, res, next) => {
-  Expense.findAll({ where: { userId: req.user.id } })
+  const setOffset = 5 * req.params.pageno;
+  console.log(setOffset);
+  console.log(req.params.pageno);
+
+  Expense.findAll({
+    where: { userId: req.user.id },
+    order: [["id", "DESC"]],
+    limit: 5,
+    offset: setOffset,
+  })
     .then((data) => {
       res.json(data);
+    })
+    .catch((e) => console.log(e));
+};
+
+exports.getExpenseCount = (req, res, next) => {
+  Expense.count({ where: { userId: req.user.id } })
+    .then((d) => {
+      res.json(d);
+      console.log(d);
     })
     .catch((e) => console.log(e));
 };

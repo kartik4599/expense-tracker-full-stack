@@ -4,6 +4,19 @@ const Payment = require("../model/payment");
 const User = require("../model/user");
 const Expense = require("../model/expensetable");
 const Sequelize = require("sequelize");
+const ExpenseTable = require("../model/expensetable");
+const convert = require("json-2-csv");
+require("dotenv").config();
+const fs = require("fs");
+const { Await } = require("react-router-dom");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dv7krzlua",
+  api_key: process.env.CLOUDNARY_API_KEY,
+  api_secret: process.env.CLOUDNARY_API_SECRET,
+  secure: true,
+});
 
 exports.payment = (req, res, next) => {
   const razor = new Razorpay({
@@ -51,4 +64,26 @@ exports.leaderboard = (req, res, next) => {
       res.json(jsonData);
     })
     .catch((e) => console.log(e));
+};
+
+exports.download = async (req, res, next) => {
+  const data = await ExpenseTable.findAll({
+    where: { userId: req.user.id },
+    attributes: ["description", "amount", "category"],
+  });
+  const jsonData = JSON.parse(JSON.stringify(data));
+  const csv = await convert.json2csvAsync(jsonData);
+  console.log(csv);
+  try {
+    console.log(csv);
+    // const filename = `expense${Date.now()}.csv`;
+    // fs.writeFileSync(filename, csv);
+    cloudinary.uploader
+      .create_zip("expense1675325422223.csv")
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(jsonData);
 };

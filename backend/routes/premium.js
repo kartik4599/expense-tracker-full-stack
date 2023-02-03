@@ -9,6 +9,12 @@ routes.get("/isPremium", expenseMiddle.authUser, premiumController.getUser);
 
 routes.post("/recive", expenseMiddle.authUser, premiumController.paymentRecive);
 
-routes.get("/leaderboard", premiumController.leaderboard);
+routes.get(
+  "/leaderboard",
+  expenseMiddle.premiumUser,
+  premiumController.leaderboard
+);
+
+routes.get("/download", expenseMiddle.premiumUser, premiumController.download);
 
 module.exports = routes;

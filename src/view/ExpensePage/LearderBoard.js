@@ -7,7 +7,9 @@ const LearderBoard = () => {
   const [see, setSee] = useState(false);
   useEffect(() => {
     const getData = async () => {
-      const res = await axios.get("/premium/leaderboard");
+      const res = await axios.get("/premium/leaderboard", {
+        headers: { auth: localStorage.getItem("login") },
+      });
       console.log(res.data);
       setData(res.data);
     };

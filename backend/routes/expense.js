@@ -15,7 +15,17 @@ routes.patch(
   expenseController.updateExpense
 );
 
-routes.get("/getExpense", expenseMiddle.authUser, expenseController.getExpense);
+routes.get(
+  "/getExpense/:pageno",
+  expenseMiddle.authUser,
+  expenseController.getExpense
+);
+
+routes.get(
+  "/getExpenseCount",
+  expenseMiddle.authUser,
+  expenseController.getExpenseCount
+);
 
 routes.delete(
   "/delete/:id",
