@@ -25,14 +25,14 @@ exports.updateExpense = (req, res, next) => {
 };
 
 exports.getExpense = (req, res, next) => {
-  const setOffset = 5 * req.params.pageno;
-  console.log(setOffset);
+  console.log(req.params.limit);
   console.log(req.params.pageno);
+  const setOffset = req.params.limit * req.params.pageno;
 
   Expense.findAll({
     where: { userId: req.user.id },
     order: [["id", "DESC"]],
-    limit: 5,
+    limit: parseInt(req.params.limit),
     offset: setOffset,
   })
     .then((data) => {

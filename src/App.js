@@ -21,9 +21,7 @@ function App() {
         headers: { auth: localStorage.getItem("login") },
       });
       console.log(count.data);
-      const number = Math.ceil(count.data / 5);
-      console.log(number);
-      setTotalCount(number);
+      setTotalCount(count.data);
 
       const res = await axios.get("/premium/isPremium", {
         headers: { auth: localStorage.getItem("login") },
@@ -31,6 +29,8 @@ function App() {
       if (res.data.status) {
         setPremium(true);
       }
+
+      if (localStorage.getItem("size")) localStorage.setItem("size", 5);
     };
     fetchData();
   }, []);

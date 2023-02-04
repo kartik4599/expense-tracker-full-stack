@@ -16,7 +16,7 @@ routes.patch(
 );
 
 routes.get(
-  "/getExpense/:pageno",
+  "/getExpense/:pageno/:limit",
   expenseMiddle.authUser,
   expenseController.getExpense
 );

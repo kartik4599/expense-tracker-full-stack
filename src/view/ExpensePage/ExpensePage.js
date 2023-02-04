@@ -8,6 +8,10 @@ const ExpensePage = ({ isPremium, totalCount }) => {
   const [data, setData] = useState([]);
   const [update, setUpdate] = useState(false);
   const [currentPage, setcurrentPage] = useState(0);
+  const [pageNo, setpageNo] = useState(0);
+  const [currentSize, setcurrentSize] = useState(
+    localStorage.getItem("size") ? parseInt(localStorage.getItem("size")) : 5
+  );
   const amountRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -15,15 +19,22 @@ const ExpensePage = ({ isPremium, totalCount }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get(`/getExpense/${currentPage}`, {
-          headers: { auth: localStorage.getItem("login") },
-        });
+        const res = await axios.get(
+          `/getExpense/${currentPage}/${currentSize}`,
+          {
+            headers: { auth: localStorage.getItem("login") },
+          }
+        );
         console.log(res.data);
         setData(res.data);
+        console.log(totalCount, currentSize);
+        const number = Math.ceil(totalCount / currentSize);
+        setpageNo(number);
+        console.log(number);
       } catch (e) {}
     };
     getData();
-  }, [currentPage]);
+  }, [currentPage, currentSize, totalCount]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -88,6 +99,11 @@ const ExpensePage = ({ isPremium, totalCount }) => {
     setUpdate(false);
   };
 
+  const sizeHandler = (value) => {
+    setcurrentSize(value);
+    localStorage.setItem("size", value);
+  };
+
   return (
     <>
       <div className="container">
@@ -150,9 +166,23 @@ const ExpensePage = ({ isPremium, totalCount }) => {
                 data={data}
                 updateHandler={updateHandler}
                 deleteHandler={deleteHandler}
+                sizeHandler={sizeHandler}
+                currentSize={currentSize}
               />
               <div className="pageCount">
-                {Array.apply(null, Array(totalCount)).map((e, i) => {
+                {1 < currentPage && (
+                  <>
+                    <button
+                      className="elseButton"
+                      onClick={() => {
+                        setcurrentPage(0);
+                      }}>
+                      1
+                    </button>
+                    <span>......</span>
+                  </>
+                )}
+                {Array.apply(null, Array(pageNo)).map((e, i) => {
                   return (
                     <button
                       key={i}
@@ -160,12 +190,28 @@ const ExpensePage = ({ isPremium, totalCount }) => {
                         setcurrentPage(i);
                       }}
                       className={
-                        currentPage === i ? "pagebutton" : "elseButton"
+                        currentPage === i
+                          ? "pagebutton"
+                          : currentPage - 1 === i || currentPage + 1 === i
+                          ? "elseButton"
+                          : "hideButton"
                       }>
                       {i + 1}
                     </button>
                   );
                 })}
+                {pageNo > currentPage + 2 && (
+                  <>
+                    <span>......</span>
+                    <button
+                      className="elseButton"
+                      onClick={() => {
+                        setcurrentPage(pageNo - 1);
+                      }}>
+                      {pageNo}
+                    </button>
+                  </>
+                )}
               </div>
             </>
           )}
