@@ -1,9 +1,23 @@
 const Expense = require("../model/expensetable");
+const User = require("../model/user");
 
-exports.addExpense = (req, res, next) => {
-  console.log(req.user);
+exports.addExpense = async (req, res, next) => {
   const { amount, description, category } = req.body;
-  Expense.create({ amount, description, category, userId: req.user.id });
+  await Expense.create({
+    amount,
+    description,
+    category,
+    userId: req.user.id,
+  });
+  User.findByPk(req.user.id)
+    .then((data) => {
+      data.total += parseInt(amount);
+      data.save();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  // console.log(resp);
   res.json({ status: "added" });
 };
 

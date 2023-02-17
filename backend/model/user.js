@@ -20,6 +20,10 @@ const User = DB.define("users", {
   password: {
     type: Sequelize.STRING,
   },
+  total: {
+    type: Sequelize.DOUBLE,
+    defaultValue: 0,
+  },
   premium: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,

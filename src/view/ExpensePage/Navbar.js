@@ -27,52 +27,52 @@ const Navbar = ({ loginset, isPremium, premiumHandler }) => {
   };
 
   const paymentHandler = async () => {
-    try {
-      const sendData = {
-        amount: "100",
-        currency: "INR",
-        receipt: "premium",
-      };
-      const res = await axios.post("/premium/payment", sendData, {
-        headers: { auth: localStorage.getItem("login") },
-      });
+    // try {
+    //   const sendData = {
+    //     amount: "100",
+    //     currency: "INR",
+    //     receipt: "premium",
+    //   };
+    //   const res = await axios.post("/premium/payment", sendData, {
+    //     headers: { auth: localStorage.getItem("login") },
+    //   });
 
-      console.log(res.data);
+    //   console.log(res.data);
 
-      const options = {
-        key: res.data.key_id,
-        amount: res.data.amount,
-        currency: "INR",
-        name: "Kartik Mendu",
-        description: "Test Transaction",
-        image: "https://example.com/your_logo",
-        order_id: res.data.id,
-        handler: function (response) {
-          axios.post("/paymentrecive", response);
-          alert(response.razorpay_payment_id);
-          alert(response.razorpay_order_id);
-          alert(response.razorpay_signature);
-        },
-        prefill: {
-          name: "Piyush Garg",
-          email: "youremail@example.com",
-          contact: "9999999999",
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-      const rzpay = new Razorpay(options);
-      rzpay.open();
-      rzpay.on("payment.failed", (res) => {
-        swal(res.error.description);
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    //   const options = {
+    //     key: res.data.key_id,
+    //     amount: res.data.amount,
+    //     currency: "INR",
+    //     name: "Kartik Mendu",
+    //     description: "Test Transaction",
+    //     image: "https://example.com/your_logo",
+    //     order_id: res.data.id,
+    //     handler: function (response) {
+    //       axios.post("/paymentrecive", response);
+    //       alert(response.razorpay_payment_id);
+    //       alert(response.razorpay_order_id);
+    //       alert(response.razorpay_signature);
+    //     },
+    //     prefill: {
+    //       name: "Piyush Garg",
+    //       email: "youremail@example.com",
+    //       contact: "9999999999",
+    //     },
+    //     notes: {
+    //       address: "Razorpay Corporate Office",
+    //     },
+    //     theme: {
+    //       color: "#3399cc",
+    //     },
+    //   };
+    //   const rzpay = new Razorpay(options);
+    //   rzpay.open();
+    //   rzpay.on("payment.failed", (res) => {
+    //     swal(res.error.description);
+    //   });
+    // } catch (e) {
+    //   console.log(e);
+    // }
     console.log(localStorage.getItem("login"));
     const finalres = await axios.post(
       "/premium/recive",
@@ -89,7 +89,7 @@ const Navbar = ({ loginset, isPremium, premiumHandler }) => {
     <nav className="navcard">
       <div>
         <span>Expense Tracker </span>
-        {isPremium && <span className="premium">(Premium User)</span>}
+        {isPremium && <span>(Premium User)</span>}
       </div>
       <ul>
         <li

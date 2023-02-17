@@ -24,7 +24,8 @@
   /* font-weight: bold; */
 }
 
-.premium{
+.navcard span:last-child {
+  font-size: 20px;
   color: pink;
 }
 

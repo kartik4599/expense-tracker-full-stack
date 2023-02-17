@@ -41,7 +41,7 @@ body {
   padding: 1.5rem;
   z-index: 10;
   color: whitesmoke;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .expenseCardBG {
@@ -202,6 +202,17 @@ body {
 .setSize input::placeholder {
   color: black;
   font-weight: bold;
+}
+
+.setSize h3 {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.setSize h3 span {
+  font-size: 15px;
+  padding: 10px;
 }
 
 .sizeSelect {

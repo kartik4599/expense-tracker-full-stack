@@ -8,7 +8,6 @@ const ExpenseTable = require("../model/expensetable");
 const convert = require("json-2-csv");
 require("dotenv").config();
 const fs = require("fs");
-const { Await } = require("react-router-dom");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -53,17 +52,27 @@ exports.getUser = (req, res, next) => {
 };
 
 exports.leaderboard = (req, res, next) => {
-  Expense.findAll({
-    attributes: [[Sequelize.fn("sum", Sequelize.col("amount")), "total"]],
-    group: ["userId"],
-    include: [{ model: User, attributes: ["name"] }],
-  })
+  User.findAll({ attributes: ["name", "total"] })
     .then((data) => {
       const jsonData = JSON.parse(JSON.stringify(data));
+      
       jsonData.sort((a, b) => b.total - a.total);
       res.json(jsonData);
     })
-    .catch((e) => console.log(e));
+    .catch();
+
+  // Expense.findAll({
+  //   attributes: [[Sequelize.fn("sum", Sequelize.col("amount")), "total"]],
+  //   group: ["userId"],
+  //   include: [{ model: User, attributes: ["name"] }],
+  // })
+  //   .then((data) => {
+  //     const jsonData = JSON.parse(JSON.stringify(data));
+  //     console.log(jsonData);
+  //     jsonData.sort((a, b) => b.total - a.total);
+  //     res.json(jsonData);
+  //   })
+  //   .catch((e) => console.log(e));
 };
 
 exports.download = async (req, res, next) => {
@@ -87,3 +96,11 @@ exports.download = async (req, res, next) => {
   }
   console.log(jsonData);
 };
+
+
+// 0
+// : 
+// {name: 'Kartik Mendu', total: 615}
+// 1
+// : 
+// {name: 'vivek', total: 0}
