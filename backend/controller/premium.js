@@ -55,11 +55,10 @@ exports.leaderboard = (req, res, next) => {
   User.findAll({ attributes: ["name", "total"] })
     .then((data) => {
       const jsonData = JSON.parse(JSON.stringify(data));
-      
       jsonData.sort((a, b) => b.total - a.total);
       res.json(jsonData);
     })
-    .catch();
+    .catch((e) => console.log(e));
 
   // Expense.findAll({
   //   attributes: [[Sequelize.fn("sum", Sequelize.col("amount")), "total"]],
@@ -97,10 +96,9 @@ exports.download = async (req, res, next) => {
   console.log(jsonData);
 };
 
-
 // 0
-// : 
+// :
 // {name: 'Kartik Mendu', total: 615}
 // 1
-// : 
+// :
 // {name: 'vivek', total: 0}

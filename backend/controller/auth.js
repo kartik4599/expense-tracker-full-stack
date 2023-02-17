@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Sib = require("sib-api-v3-sdk");
 const keys = require("../util/keys");
+const sequelize = require("../util/database");
 const ForgotPasswordRequest = require("../model/forgotPassword");
 const { v4 } = require("uuid");
 require("dotenv").config();
@@ -37,19 +38,25 @@ exports.loginController = (req, res, next) => {
 };
 
 exports.signUpController = async (req, res, next) => {
+  const tran = sequelize.transaction();
   const { name, email, password } = req.body;
 
   bcrypt.hash(password, 8, (err, hash) => {
     console.log(hash, err);
-    User.create({
-      name,
-      email,
-      password: hash,
-    })
+    User.create(
+      {
+        name,
+        email,
+        password: hash,
+      },
+      { transaction: tran }
+    )
       .then((data) => {
+        tran.commit();
         res.json({ data, status: "success" });
       })
       .catch((e) => {
+        tran.commit();
         User.findAll({ where: { email: email } })
           .then((data) => {
             if (data.length > 0) {

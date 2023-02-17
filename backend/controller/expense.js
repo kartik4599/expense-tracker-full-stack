@@ -1,23 +1,41 @@
 const Expense = require("../model/expensetable");
 const User = require("../model/user");
+const sequelize = require("../util/database");
 
 exports.addExpense = async (req, res, next) => {
+  const tran = await sequelize.transaction();
+
   const { amount, description, category } = req.body;
-  await Expense.create({
-    amount,
-    description,
-    category,
-    userId: req.user.id,
-  });
-  User.findByPk(req.user.id)
-    .then((data) => {
-      data.total += parseInt(amount);
-      data.save();
+  Expense.create(
+    {
+      amount,
+      description,
+      category,
+      userId: req.user.id,
+    },
+    {
+      transaction: tran,
+    }
+  )
+    .then((expense) => {
+      User.findByPk(req.user.id, {
+        transaction: tran,
+      })
+        .then((data) => {
+          data.total += parseInt(amount);
+          data.save();
+          tran.commit();
+        })
+        .catch((e) => {
+          tran.rollback();
+          console.log(e);
+        });
     })
     .catch((e) => {
+      tran.rollback();
       console.log(e);
     });
-  // console.log(resp);
+
   res.json({ status: "added" });
 };
 
